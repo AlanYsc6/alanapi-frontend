@@ -14,7 +14,7 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import { history, useModel } from '@umijs/max';
+import { history, useLocation, useModel } from '@umijs/max';
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
@@ -39,6 +39,9 @@ const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
   const { initialState, setInitialState } = useModel('@@initialState');
+  // 读取注册页跳转时回写的账号密码，自动填充表单
+  const location = useLocation();
+  const registerUser = (location.state ?? {}) as Partial<API.UserLoginRequest>;
   const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
       // 登录
@@ -69,6 +72,8 @@ const Login: React.FC = () => {
           subTitle={'API 开放平台'}
           initialValues={{
             autoLogin: true,
+            userAccount: registerUser.userAccount,
+            userPassword: registerUser.userPassword,
           }}
           actions={[
             '其他登录方式 :',
@@ -199,8 +204,11 @@ const Login: React.FC = () => {
               style={{
                 float: 'right',
               }}
+              onClick={() => {
+                history.push('/user/register');
+              }}
             >
-              忘记密码 ?
+              没有账号？去注册
             </a>
           </div>
         </LoginForm>
