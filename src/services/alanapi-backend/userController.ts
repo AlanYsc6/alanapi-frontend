@@ -134,3 +134,32 @@ export async function updateUserUsingPOST(
     ...(options || {}),
   });
 }
+
+/** updateMyUser POST /api/user/update/my */
+export async function updateMyUserUsingPOST(
+  body: API.UserUpdateMyRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/user/update/my', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** fileUpload POST /api/file/upload */
+export async function fileUploadUsingPOST(
+  file: File,
+  options?: { [key: string]: any },
+) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request<API.BaseResponsestring>('/api/file/upload', {
+    method: 'POST',
+    data: formData,
+    ...(options || {}),
+  });
+}

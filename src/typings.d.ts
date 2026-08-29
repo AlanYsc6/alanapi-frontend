@@ -28,5 +28,6 @@ declare const REACT_APP_ENV: 'test' | 'dev' | 'pre' | false;
  */
 interface InitialState {
   loginUser?: API.UserVO;
+  settings?: Partial<import('@ant-design/pro-components').Settings>;
 }
 

@@ -1,5 +1,6 @@
 export default [
   { path: '/', name: '主页', icon: 'smile', component: './Index' },
+  { path: '/usercenter', name: '个人中心', icon: 'user', component: './UserCenter' },
   { path: '/interface_info/:id', name: '查看接口', icon: 'smile', component: './InterfaceInfo', hideInMenu: true },
   {
     path: '/user',
