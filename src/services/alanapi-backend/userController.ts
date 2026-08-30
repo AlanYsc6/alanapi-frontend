@@ -60,6 +60,35 @@ export async function getLoginUserUsingGET(options?: { [key: string]: any }) {
   });
 }
 
+/** sendSmsCode GET /api/user/sms/send */
+export async function sendSmsCodeUsingGET(
+  params: API.sendSmsCodeUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/user/sms/send', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** userLoginByPhone POST /api/user/login/phone */
+export async function userLoginByPhoneUsingPOST(
+  body: API.UserLoginByPhoneRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseUser>('/api/user/login/phone', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listUser GET /api/user/list */
 export async function listUserUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

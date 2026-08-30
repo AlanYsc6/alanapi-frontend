@@ -1,14 +1,11 @@
 import Footer from '@/components/Footer';
 import RightContent from '@/components/RightContent';
-import { LinkOutlined } from '@ant-design/icons';
-import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history, Link } from '@umijs/max';
+import { history } from '@umijs/max';
 import { requestConfig } from './requestConfig';
 import {getLoginUserUsingGET} from "@/services/alanapi-backend/userController";
 import defaultSettings from '../config/defaultSettings';
 
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
 /**
@@ -16,7 +13,7 @@ const loginPath = '/user/login';
  * */
 export async function getInitialState(): Promise<InitialState> {
   // 当页面首次加载时，获取要全局保存的数据，比如用户登录信息
-  // settings 必须放入全局状态，否则布局内的 SettingDrawer 等组件会因读不到主题配置而崩溃
+  // settings 用于布局读取主题配置
   const state: InitialState = {
     loginUser: undefined,
     settings: defaultSettings,
@@ -33,7 +30,7 @@ export async function getInitialState(): Promise<InitialState> {
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     layout: "top",
     rightContentRender: () => <RightContent />,
@@ -68,39 +65,10 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
-      : [],
+    links: [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
-    // 增加一个 loading 的状态
-    childrenRender: (children, props) => {
-      // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-          {!props.location?.pathname?.includes('/login') && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={initialState?.settings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
-        </>
-      );
-    },
     ...initialState?.settings,
   };
 };

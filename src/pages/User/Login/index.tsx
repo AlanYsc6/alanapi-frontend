@@ -1,12 +1,8 @@
 import Footer from '@/components/Footer';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
-  AlipayCircleOutlined,
   LockOutlined,
   MobileOutlined,
-  TaobaoCircleOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
 } from '@ant-design/icons';
 import {
   LoginForm,
@@ -19,7 +15,11 @@ import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import styles from './index.less';
-import { userLoginUsingPOST } from '@/services/alanapi-backend/userController';
+import {
+  sendSmsCodeUsingGET,
+  userLoginByPhoneUsingPOST,
+  userLoginUsingPOST,
+} from '@/services/alanapi-backend/userController';
 
 const LoginMessage: React.FC<{
   content: string;
@@ -35,6 +35,9 @@ const LoginMessage: React.FC<{
     />
   );
 };
+// 账号密码登录 + 手机号验证码登录共用的表单值
+type LoginValues = API.UserLoginRequest & { mobile?: string; captcha?: string };
+
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
   const [type, setType] = useState<string>('account');
@@ -42,9 +45,24 @@ const Login: React.FC = () => {
   // 读取注册页跳转时回写的账号密码，自动填充表单
   const location = useLocation();
   const registerUser = (location.state ?? {}) as Partial<API.UserLoginRequest>;
-  const handleSubmit = async (values: API.UserLoginRequest) => {
+  const handleSubmit = async (values: LoginValues) => {
     try {
-      // 登录
+      // 手机号验证码登录（用户不存在时后端自动注册）
+      if (type === 'mobile') {
+        const res = await userLoginByPhoneUsingPOST({
+          phone: values.mobile,
+          code: values.captcha,
+        });
+        if (res.data) {
+          const urlParams = new URL(window.location.href).searchParams;
+          history.push(urlParams.get('redirect') || '/');
+          setInitialState({
+            loginUser: res.data
+          });
+        }
+        return;
+      }
+      // 账号密码登录
       const res = await userLoginUsingPOST({
         ...values,
       });
@@ -75,14 +93,8 @@ const Login: React.FC = () => {
             userAccount: registerUser.userAccount,
             userPassword: registerUser.userPassword,
           }}
-          actions={[
-            '其他登录方式 :',
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.UserLoginRequest);
+            await handleSubmit(values as LoginValues);
           }}
         >
           <Tabs
@@ -174,20 +186,24 @@ const Login: React.FC = () => {
                   return '获取验证码';
                 }}
                 name="captcha"
+                phoneName="mobile"
                 rules={[
                   {
                     required: true,
                     message: '验证码是必填项！',
                   },
                 ]}
-                onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
-                  });
-                  if (result === false) {
-                    return;
+                onGetCaptcha={async (phone: string) => {
+                  try {
+                    const res = await sendSmsCodeUsingGET({ phone });
+                    if (res.data) {
+                      message.success('验证码已发送，5 分钟内有效，请查收短信');
+                    }
+                  } catch (error: any) {
+                    message.error(error.message ?? '验证码发送失败，请稍后重试');
+                    // 发送失败时不开始倒计时
+                    return Promise.reject();
                   }
-                  message.success('获取验证码成功！验证码为：1234');
                 }}
               />
             </>

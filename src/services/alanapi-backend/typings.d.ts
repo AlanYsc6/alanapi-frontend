@@ -550,9 +550,18 @@ declare namespace API {
     totalNum?: number;
   };
 
+  type UserLoginByPhoneRequest = {
+    code?: string;
+    phone?: string;
+  };
+
   type UserLoginRequest = {
     userAccount?: string;
     userPassword?: string;
+  };
+
+  type sendSmsCodeUsingGETParams = {
+    phone?: string;
   };
 
   type UserRegisterRequest = {
