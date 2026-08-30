@@ -89,6 +89,50 @@ export async function userLoginByPhoneUsingPOST(
   });
 }
 
+/** sendMailCode GET /api/user/mail/send */
+export async function sendMailCodeUsingGET(
+  params: API.sendMailCodeUsingGETParams,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/user/mail/send', {
+    method: 'GET',
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
+/** userLoginByEmail POST /api/user/login/email */
+export async function userLoginByEmailUsingPOST(
+  body: API.UserEmailLoginRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseUser>('/api/user/login/email', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** resetUserPassword POST /api/user/reset/password */
+export async function resetUserPasswordUsingPOST(
+  body: API.UserResetPasswordRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponseboolean>('/api/user/reset/password', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listUser GET /api/user/list */
 export async function listUserUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

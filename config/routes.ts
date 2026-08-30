@@ -9,6 +9,7 @@ export default [
     routes: [
       { name: '登录', path: '/user/login', component: './User/Login' },
       { name: '注册', path: '/user/register', component: './User/Register' },
+      { name: '重置密码', path: '/user/reset_password', component: './User/ResetPassword' },
     ],
   },
   {

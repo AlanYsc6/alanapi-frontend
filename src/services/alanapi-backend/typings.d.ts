@@ -555,6 +555,22 @@ declare namespace API {
     phone?: string;
   };
 
+  type UserEmailLoginRequest = {
+    code?: string;
+    email?: string;
+  };
+
+  type UserResetPasswordRequest = {
+    code?: string;
+    email?: string;
+    newPassword?: string;
+  };
+
+  type sendMailCodeUsingGETParams = {
+    email?: string;
+    type?: string;
+  };
+
   type UserLoginRequest = {
     userAccount?: string;
     userPassword?: string;

@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer';
 import {
   LockOutlined,
+  MailOutlined,
   MobileOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -16,7 +17,9 @@ import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import styles from './index.less';
 import {
+  sendMailCodeUsingGET,
   sendSmsCodeUsingGET,
+  userLoginByEmailUsingPOST,
   userLoginByPhoneUsingPOST,
   userLoginUsingPOST,
 } from '@/services/alanapi-backend/userController';
@@ -35,8 +38,13 @@ const LoginMessage: React.FC<{
     />
   );
 };
-// 账号密码登录 + 手机号验证码登录共用的表单值
-type LoginValues = API.UserLoginRequest & { mobile?: string; captcha?: string };
+// 账号密码 + 手机号验证码 + 邮箱验证码登录共用的表单值
+type LoginValues = API.UserLoginRequest & {
+  mobile?: string;
+  captcha?: string;
+  email?: string;
+  emailCaptcha?: string;
+};
 
 const Login: React.FC = () => {
   const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
@@ -45,6 +53,14 @@ const Login: React.FC = () => {
   // 读取注册页跳转时回写的账号密码，自动填充表单
   const location = useLocation();
   const registerUser = (location.state ?? {}) as Partial<API.UserLoginRequest>;
+  // 登录成功后的统一跳转
+  const loginSuccess = (user: API.UserVO) => {
+    const urlParams = new URL(window.location.href).searchParams;
+    history.push(urlParams.get('redirect') || '/');
+    setInitialState({
+      loginUser: user
+    });
+  };
   const handleSubmit = async (values: LoginValues) => {
     try {
       // 手机号验证码登录（用户不存在时后端自动注册）
@@ -54,11 +70,18 @@ const Login: React.FC = () => {
           code: values.captcha,
         });
         if (res.data) {
-          const urlParams = new URL(window.location.href).searchParams;
-          history.push(urlParams.get('redirect') || '/');
-          setInitialState({
-            loginUser: res.data
-          });
+          loginSuccess(res.data);
+        }
+        return;
+      }
+      // 邮箱验证码登录（用户不存在时后端自动注册）
+      if (type === 'email') {
+        const res = await userLoginByEmailUsingPOST({
+          email: values.email,
+          code: values.emailCaptcha,
+        });
+        if (res.data) {
+          loginSuccess(res.data);
         }
         return;
       }
@@ -67,11 +90,7 @@ const Login: React.FC = () => {
         ...values,
       });
       if (res.data) {
-        const urlParams = new URL(window.location.href).searchParams;
-        history.push(urlParams.get('redirect') || '/');
-        setInitialState({
-          loginUser: res.data
-        });
+        loginSuccess(res.data);
         return;
       }
     } catch (error) {
@@ -109,6 +128,10 @@ const Login: React.FC = () => {
               {
                 key: 'mobile',
                 label: '手机号登录',
+              },
+              {
+                key: 'email',
+                label: '邮箱登录',
               },
             ]}
           />
@@ -208,6 +231,57 @@ const Login: React.FC = () => {
               />
             </>
           )}
+          {type === 'email' && (
+            <>
+              <ProFormText
+                fieldProps={{
+                  size: 'large',
+                  prefix: <MailOutlined className={styles.prefixIcon} />,
+                }}
+                name="email"
+                placeholder={'请输入邮箱！'}
+                rules={[
+                  {
+                    required: true,
+                    message: '邮箱是必填项！',
+                  },
+                  {
+                    type: 'email',
+                    message: '不合法的邮箱！',
+                  },
+                ]}
+              />
+              <ProFormCaptcha
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined className={styles.prefixIcon} />,
+                }}
+                captchaProps={{
+                  size: 'large',
+                }}
+                placeholder={'请输入验证码！'}
+                name="emailCaptcha"
+                phoneName="email"
+                rules={[
+                  {
+                    required: true,
+                    message: '验证码是必填项！',
+                  },
+                ]}
+                onGetCaptcha={async (email: string) => {
+                  try {
+                    const res = await sendMailCodeUsingGET({ email, type: 'login' });
+                    if (res.data) {
+                      message.success('验证码已发送，5 分钟内有效，请查收邮件');
+                    }
+                  } catch (error: any) {
+                    message.error(error.message ?? '验证码发送失败，请稍后重试');
+                    return Promise.reject();
+                  }
+                }}
+              />
+            </>
+          )}
           <div
             style={{
               marginBottom: 24,
@@ -225,6 +299,17 @@ const Login: React.FC = () => {
               }}
             >
               没有账号？去注册
+            </a>
+            <a
+              style={{
+                float: 'right',
+                marginRight: 16,
+              }}
+              onClick={() => {
+                history.push('/user/reset_password');
+              }}
+            >
+              忘记密码？
             </a>
           </div>
         </LoginForm>
