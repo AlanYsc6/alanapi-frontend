@@ -578,6 +578,8 @@ declare namespace API {
   };
 
   type UserVO = {
+    accessKey?: string;
+    secretKey?: string;
     createTime?: string;
     gender?: number;
     id?: number;

@@ -29,6 +29,14 @@ export async function deleteUserUsingPOST(
   });
 }
 
+/** generateKey POST /api/user/generateKey */
+export async function generateKeyUsingPOST(options?: { [key: string]: any }) {
+  return request<API.BaseResponseUserVO>('/api/user/generateKey', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 /** getUserById GET /api/user/get */
 export async function getUserByIdUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
