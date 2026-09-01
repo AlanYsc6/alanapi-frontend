@@ -67,10 +67,10 @@ const Index: React.FC = () => {
             <Descriptions.Item label="接口状态">{data.status ? '开启' : '关闭'}</Descriptions.Item>
             <Descriptions.Item label="描述">{data.description}</Descriptions.Item>
             <Descriptions.Item label="请求地址">{data.url}</Descriptions.Item>
-            <Descriptions.Item label="请求方法">{data.method}</Descriptions.Item>
+            <Descriptions.Item label="请求类型">{data.method}</Descriptions.Item>
             <Descriptions.Item label="请求参数">{data.requestParams}</Descriptions.Item>
             <Descriptions.Item label="请求头">{data.requestHeader}</Descriptions.Item>
-            <Descriptions.Item label="响应头">{data.responseHeader}</Descriptions.Item>
+            <Descriptions.Item label="响应参数">{data.responseParams}</Descriptions.Item>
             <Descriptions.Item label="创建时间">{data.createTime}</Descriptions.Item>
             <Descriptions.Item label="更新时间">{data.updateTime}</Descriptions.Item>
           </Descriptions>

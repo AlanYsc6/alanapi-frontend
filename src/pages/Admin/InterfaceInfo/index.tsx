@@ -20,6 +20,7 @@ import {
 } from '@/services/alanapi-backend/interfaceInfoController';
 import CreateModal from '@/pages/Admin/InterfaceInfo/components/CreateModal';
 import UpdateModal from "@/pages/Admin/InterfaceInfo/components/UpdateModal";
+import KeyValueInput from '@/pages/Admin/InterfaceInfo/components/KeyValueInput';
 
 const TableList: React.FC = () => {
   /**
@@ -197,12 +198,16 @@ const TableList: React.FC = () => {
       valueType: 'textarea',
     },
     {
-      title: '请求方法',
+      title: '请求类型',
       dataIndex: 'method',
-      valueType: 'text',
+      valueType: 'select',
+      valueEnum: {
+        GET: { text: 'GET' },
+        POST: { text: 'POST' },
+      },
     },
     {
-      title: 'url',
+      title: 'URL',
       dataIndex: 'url',
       valueType: 'text',
     },
@@ -215,11 +220,17 @@ const TableList: React.FC = () => {
       title: '请求头',
       dataIndex: 'requestHeader',
       valueType: 'jsonCode',
+      hideInSearch: true,
+      renderFormItem: () => <KeyValueInput />,
     },
     {
-      title: '响应头',
-      dataIndex: 'responseHeader',
+      title: '响应参数',
+      dataIndex: 'responseParams',
       valueType: 'jsonCode',
+      hideInSearch: true,
+      formItemProps: {
+        rules: [{ required: true, message: '请输入响应参数' }],
+      },
     },
     {
       title: '状态',
