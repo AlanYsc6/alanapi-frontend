@@ -156,6 +156,26 @@ const TableList: React.FC = () => {
   };
 
   /**
+   * 批量删除节点
+   *
+   * @param records
+   */
+  const handleBatchRemove = async (records: API.InterfaceInfo[]) => {
+    const hide = message.loading('正在删除');
+    if (!records?.length) return true;
+    try {
+      await Promise.all(records.map((item) => deleteInterfaceInfoUsingPOST({ id: item.id })));
+      hide();
+      message.success('删除成功');
+      return true;
+    } catch (error: any) {
+      hide();
+      message.error('删除失败，' + error.message);
+      return false;
+    }
+  };
+
+  /**
    * @en-US International configuration
    * @zh-CN 国际化配置
    * */
@@ -222,7 +242,7 @@ const TableList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <a
-          key="config"
+          key="edit"
           onClick={() => {
             handleUpdateModalVisible(true);
             setCurrentRow(record);
@@ -231,7 +251,7 @@ const TableList: React.FC = () => {
           修改
         </a>,
         record.status === 0 ? <a
-          key="config"
+          key="publish"
           onClick={() => {
             handleOnline(record);
           }}
@@ -240,7 +260,7 @@ const TableList: React.FC = () => {
         </a> : null,
         record.status === 1 ? <Button
           type="text"
-          key="config"
+          key="offline"
           danger
           onClick={() => {
             handleOffline(record);
@@ -250,7 +270,7 @@ const TableList: React.FC = () => {
         </Button> : null,
         <Button
           type="text"
-          key="config"
+          key="delete"
           danger
           onClick={() => {
             handleRemove(record);
@@ -267,7 +287,7 @@ const TableList: React.FC = () => {
       <ProTable<API.RuleListItem, API.PageParams>
         headerTitle={'查询表格'}
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         search={{
           labelWidth: 120,
         }}
@@ -323,16 +343,13 @@ const TableList: React.FC = () => {
               >
                 {selectedRowsState.length}
               </a>{' '}
-              项 &nbsp;&nbsp;
-              <span>
-                服务调用次数总计 {selectedRowsState.reduce((pre, item) => pre + item.callNo!, 0)} 万
-              </span>
+              项
             </div>
           }
         >
           <Button
             onClick={async () => {
-              await handleRemove(selectedRowsState);
+              await handleBatchRemove(selectedRowsState);
               setSelectedRows([]);
               actionRef.current?.reloadAndRest?.();
             }}
