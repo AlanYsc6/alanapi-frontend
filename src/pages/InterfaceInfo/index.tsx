@@ -68,9 +68,10 @@ const Index: React.FC = () => {
             <Descriptions.Item label="描述">{data.description}</Descriptions.Item>
             <Descriptions.Item label="请求地址">{data.url}</Descriptions.Item>
             <Descriptions.Item label="请求类型">{data.method}</Descriptions.Item>
-            <Descriptions.Item label="请求参数">{data.requestParams}</Descriptions.Item>
             <Descriptions.Item label="请求头">{data.requestHeader}</Descriptions.Item>
-            <Descriptions.Item label="响应参数">{data.responseParams}</Descriptions.Item>
+            <Descriptions.Item label="请求参数">{data.requestParams}</Descriptions.Item>
+            <Descriptions.Item label="请求体">{data.requestBody}</Descriptions.Item>
+            <Descriptions.Item label="响应体">{data.responseBody}</Descriptions.Item>
             <Descriptions.Item label="创建时间">{data.createTime}</Descriptions.Item>
             <Descriptions.Item label="更新时间">{data.updateTime}</Descriptions.Item>
           </Descriptions>

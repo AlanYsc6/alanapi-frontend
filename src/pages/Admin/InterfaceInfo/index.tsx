@@ -212,11 +212,6 @@ const TableList: React.FC = () => {
       valueType: 'text',
     },
     {
-      title: '请求参数',
-      dataIndex: 'requestParams',
-      valueType: 'jsonCode',
-    },
-    {
       title: '请求头',
       dataIndex: 'requestHeader',
       valueType: 'jsonCode',
@@ -224,13 +219,22 @@ const TableList: React.FC = () => {
       renderFormItem: () => <KeyValueInput />,
     },
     {
-      title: '响应参数',
-      dataIndex: 'responseParams',
+      title: '请求参数',
+      dataIndex: 'requestParams',
       valueType: 'jsonCode',
       hideInSearch: true,
-      formItemProps: {
-        rules: [{ required: true, message: '请输入响应参数' }],
-      },
+    },
+    {
+      title: '请求体',
+      dataIndex: 'requestBody',
+      valueType: 'jsonCode',
+      hideInSearch: true,
+    },
+    {
+      title: '响应体',
+      dataIndex: 'responseBody',
+      valueType: 'jsonCode',
+      hideInSearch: true,
     },
     {
       title: '状态',
