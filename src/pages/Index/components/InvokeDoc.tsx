@@ -1,8 +1,8 @@
+import { listDocUsingGET, type DocItem } from '@/services/alanapi-backend/docController';
 import { Anchor, Card, Col, Empty, Row, Spin, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { listDocUsingGET, type DocItem } from '@/services/alanapi-backend/docController';
-import DocContent from './DocContent';
 import DefaultDoc from './DefaultDoc';
+import DocContent from './DocContent';
 
 const { Title } = Typography;
 
@@ -74,8 +74,14 @@ const InvokeDoc: React.FC = () => {
                 </section>
               ))
             ) : (
-              <Empty description="文档库为空，以下为内置文档，管理员可在「管理页 - 文档管理」中维护" image={Empty.PRESENTED_IMAGE_SIMPLE}>
-                <DefaultDoc />
+              <Empty
+                description="文档库为空，以下为内置文档，管理员可在「管理页 - 文档管理」中维护"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              >
+                {/* Empty 默认 text-align: center，包一层恢复文档的正常排版 */}
+                <div style={{ textAlign: 'left' }}>
+                  <DefaultDoc />
+                </div>
               </Empty>
             )}
           </Col>
