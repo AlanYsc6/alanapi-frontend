@@ -12,7 +12,7 @@ const Settings: LayoutSettings & {
   colorPrimary: '#1890ff',
   layout: 'top',
   contentWidth: 'Fluid',
-  fixedHeader: false,
+  fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
   title: 'alan接口',

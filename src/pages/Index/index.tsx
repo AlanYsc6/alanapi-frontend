@@ -20,6 +20,8 @@ const Index: React.FC = () => {
       const res = await listInterfaceInfoByPageUsingGET({
         current,
         pageSize,
+        // 主页只展示已上线的接口
+        status: 1,
       });
       setList(res?.data?.records ?? []);
       setTotal(res?.data?.total ?? 0);
