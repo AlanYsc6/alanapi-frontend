@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Divider, List, message, Steps, Typography } from 'antd';
 import { listInterfaceInfoByPageUsingGET } from '@/services/alanapi-backend/interfaceInfoController';
 import InvokeDoc from './components/InvokeDoc';
+import SdkDownload from './components/SdkDownload';
 
 const { Paragraph, Text } = Typography;
 
@@ -87,6 +88,10 @@ const Index: React.FC = () => {
           }}
         />
       </Card>
+
+      <Divider />
+
+      <SdkDownload />
 
       <Divider />
 

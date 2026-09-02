@@ -216,13 +216,15 @@ const TableList: React.FC = () => {
       dataIndex: 'requestHeader',
       valueType: 'jsonCode',
       hideInSearch: true,
-      renderFormItem: () => <KeyValueInput />,
+      renderFormItem: () => <KeyValueInput addText="添加请求头" />,
     },
     {
       title: '请求参数',
       dataIndex: 'requestParams',
       valueType: 'jsonCode',
       hideInSearch: true,
+      tooltip: 'GET 请求的查询参数，按 key = value 填写',
+      renderFormItem: () => <KeyValueInput addText="添加请求参数" />,
     },
     {
       title: '请求体',

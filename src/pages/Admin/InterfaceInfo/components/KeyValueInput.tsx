@@ -5,6 +5,10 @@ import React, { useEffect, useState } from 'react';
 export type Props = {
   value?: string;
   onChange?: (value: string) => void;
+  /**
+   * 添加按钮文案，用于区分请求头/请求参数等不同用途
+   */
+  addText?: string;
 };
 
 type KeyValueItem = {
@@ -55,7 +59,7 @@ const toValue = (items: KeyValueItem[]): string => {
 /**
  * 请求头键值对编辑：表单存储值为 JSON 字符串（如 {"Content-Type":"application/json"}）
  */
-const KeyValueInput: React.FC<Props> = ({ value, onChange }) => {
+const KeyValueInput: React.FC<Props> = ({ value, onChange, addText = '添加' }) => {
   const [items, setItems] = useState<KeyValueItem[]>(() => parseValue(value));
 
   useEffect(() => {
@@ -105,7 +109,7 @@ const KeyValueInput: React.FC<Props> = ({ value, onChange }) => {
         icon={<PlusOutlined />}
         onClick={() => triggerChange([...items, { key: '', value: '' }])}
       >
-        添加请求头
+        {addText}
       </Button>
     </div>
   );
