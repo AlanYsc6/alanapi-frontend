@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 import { flushSync } from 'react-dom';
 import styles from './index.less';
 import {
+  getLoginUserUsingGET,
   sendMailCodeUsingGET,
   sendSmsCodeUsingGET,
   userLoginByEmailUsingPOST,
@@ -53,13 +54,20 @@ const Login: React.FC = () => {
   // 读取注册页跳转时回写的账号密码，自动填充表单
   const location = useLocation();
   const registerUser = (location.state ?? {}) as Partial<API.UserLoginRequest>;
-  // 登录成功后的统一跳转
-  const loginSuccess = (user: API.UserVO) => {
+  // 登录成功后的统一处理：重新拉取登录用户（UserVO）回写全局状态后再跳转
+  const loginSuccess = async () => {
+    message.success('登录成功！');
+    const userRes = await getLoginUserUsingGET();
+    // 用函数式更新保留 settings 等原有全局状态，并用 flushSync 强制先渲染，
+    // 保证跳转后右上角头像（个人中心 / 退出登录）立即出现
+    flushSync(() => {
+      setInitialState((s) => ({
+        ...s,
+        loginUser: userRes.data,
+      }));
+    });
     const urlParams = new URL(window.location.href).searchParams;
     history.push(urlParams.get('redirect') || '/');
-    setInitialState({
-      loginUser: user
-    });
   };
   const handleSubmit = async (values: LoginValues) => {
     try {
@@ -70,7 +78,7 @@ const Login: React.FC = () => {
           code: values.captcha,
         });
         if (res.data) {
-          loginSuccess(res.data);
+          await loginSuccess();
         }
         return;
       }
@@ -81,7 +89,7 @@ const Login: React.FC = () => {
           code: values.emailCaptcha,
         });
         if (res.data) {
-          loginSuccess(res.data);
+          await loginSuccess();
         }
         return;
       }
@@ -90,7 +98,7 @@ const Login: React.FC = () => {
         ...values,
       });
       if (res.data) {
-        loginSuccess(res.data);
+        await loginSuccess();
         return;
       }
     } catch (error) {
