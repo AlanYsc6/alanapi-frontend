@@ -1,6 +1,6 @@
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Descriptions, message, Modal, Tag } from 'antd';
+import { Descriptions, message, Modal, Space, Tag } from 'antd';
 import React, { useRef, useState } from 'react';
 import {
   deleteInvokeLogUsingPOST,
@@ -108,15 +108,18 @@ const InvokeLog: React.FC = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      width: 120,
-      render: (_, record) => [
-        <a key="detail" onClick={() => setDetailRecord(record)}>
-          详情
-        </a>,
-        <Button key="delete" type="text" danger onClick={() => handleDelete(record)}>
-          删除
-        </Button>,
-      ],
+      width: 100,
+      fixed: 'right',
+      render: (_, record) => (
+        <Space size={12} wrap={false}>
+          <a key="detail" onClick={() => setDetailRecord(record)}>
+            详情
+          </a>
+          <a key="delete" style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record)}>
+            删除
+          </a>
+        </Space>
+      ),
     },
   ];
 

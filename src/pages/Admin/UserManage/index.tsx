@@ -418,29 +418,32 @@ const UserManage: React.FC = () => {
       valueType: 'option',
       width: 200,
       fixed: 'right',
-      render: (_, record) => [
-        <a
-          key="quota"
-          onClick={() => setQuotaUser(record)}
-        >
-          调用次数
-        </a>,
-        <a
-          key="edit"
-          onClick={() => {
-            setCurrentRow(record);
-            setEditVisible(true);
-          }}
-        >
-          修改
-        </a>,
-        <a key="frozen" style={{ color: record.userStatus === 1 ? '#52c41a' : '#faad14' }} onClick={() => handleToggleFrozen(record)}>
-          {record.userStatus === 1 ? '解冻' : '冻结'}
-        </a>,
-        <Button key="delete" type="text" danger onClick={() => handleDelete(record)}>
-          删除
-        </Button>,
-      ],
+      render: (_, record) => (
+        <Space size={12} wrap={false}>
+          <a key="quota" onClick={() => setQuotaUser(record)}>
+            调用次数
+          </a>
+          <a
+            key="edit"
+            onClick={() => {
+              setCurrentRow(record);
+              setEditVisible(true);
+            }}
+          >
+            修改
+          </a>
+          <a
+            key="frozen"
+            style={{ color: record.userStatus === 1 ? '#52c41a' : '#faad14' }}
+            onClick={() => handleToggleFrozen(record)}
+          >
+            {record.userStatus === 1 ? '解冻' : '冻结'}
+          </a>
+          <a key="delete" style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record)}>
+            删除
+          </a>
+        </Space>
+      ),
     },
   ];
 

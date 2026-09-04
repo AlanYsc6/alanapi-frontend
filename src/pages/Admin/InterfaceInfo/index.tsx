@@ -7,7 +7,7 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, Drawer, message } from 'antd';
+import { Button, Drawer, message, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 import type { SortOrder } from 'antd/es/table/interface';
 import {
@@ -269,47 +269,34 @@ const TableList: React.FC = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
-      width: 150,
+      width: 140,
       fixed: 'right',
-      render: (_, record) => [
-        <a
-          key="edit"
-          onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
-          }}
-        >
-          修改
-        </a>,
-        record.status === 0 ? <a
-          key="publish"
-          onClick={() => {
-            handleOnline(record);
-          }}
-        >
-          发布
-        </a> : null,
-        record.status === 1 ? <Button
-          type="text"
-          key="offline"
-          danger
-          onClick={() => {
-            handleOffline(record);
-          }}
-        >
-          下线
-        </Button> : null,
-        <Button
-          type="text"
-          key="delete"
-          danger
-          onClick={() => {
-            handleRemove(record);
-          }}
-        >
-          删除
-        </Button>,
-      ],
+      render: (_, record) => (
+        <Space size={12} wrap={false}>
+          <a
+            key="edit"
+            onClick={() => {
+              handleUpdateModalVisible(true);
+              setCurrentRow(record);
+            }}
+          >
+            修改
+          </a>
+          {record.status === 0 ? (
+            <a key="publish" onClick={() => handleOnline(record)}>
+              发布
+            </a>
+          ) : null}
+          {record.status === 1 ? (
+            <a key="offline" style={{ color: '#ff4d4f' }} onClick={() => handleOffline(record)}>
+              下线
+            </a>
+          ) : null}
+          <a key="delete" style={{ color: '#ff4d4f' }} onClick={() => handleRemove(record)}>
+            删除
+          </a>
+        </Space>
+      ),
     },
   ];
 
