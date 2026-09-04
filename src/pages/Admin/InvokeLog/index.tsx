@@ -41,6 +41,7 @@ const InvokeLog: React.FC = () => {
       title: '调用用户',
       dataIndex: 'userName',
       hideInSearch: true,
+      render: (_, record) => record.userName ?? (record.userId ? record.userId : '未认证'),
     },
     {
       title: '用户 id',
@@ -156,7 +157,7 @@ const InvokeLog: React.FC = () => {
       >
         <Descriptions column={1} bordered size="small">
           <Descriptions.Item label="调用用户">
-            {detailRecord?.userName ?? detailRecord?.userId ?? '-'}
+            {detailRecord?.userName ?? (detailRecord?.userId ? detailRecord.userId : '未认证')}
           </Descriptions.Item>
           <Descriptions.Item label="接口">
             {detailRecord?.interfaceName ?? detailRecord?.interfaceInfoId ?? '-'}
