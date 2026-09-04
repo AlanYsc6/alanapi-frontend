@@ -6,16 +6,17 @@ import {
   ProFormUploadButton,
 } from '@ant-design/pro-components';
 import { useModel } from '@umijs/max';
-import { Avatar, Card, Col, message, Row } from 'antd';
-import React, { useRef, useState } from 'react';
+import { Avatar, Card, Col, message, Row, Table, Tag } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   fileUploadUsingPOST,
   getLoginUserUsingGET,
   updateMyUserUsingPOST,
 } from '@/services/alanapi-backend/userController';
+import { listMyQuotaUsingGET, type UserQuotaItem } from '@/services/alanapi-backend/quotaController';
 
 /**
- * 个人中心：修改注册时未填写的资料（昵称、头像、性别）
+ * 个人中心：修改注册时未填写的资料（昵称、头像、性别），查看自己的接口调用次数
  */
 const UserCenter: React.FC = () => {
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -24,7 +25,39 @@ const UserCenter: React.FC = () => {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(
     loginUser?.userAvatar,
   );
+  const [myQuotaList, setMyQuotaList] = useState<UserQuotaItem[]>([]);
   const formRef = useRef<ProFormInstance>();
+
+  // 加载自己的接口调用次数（剩余次数、总调用次数）
+  const loadMyQuota = () => {
+    listMyQuotaUsingGET().then((res: any) => {
+      setMyQuotaList(res?.data ?? []);
+    });
+  };
+
+  useEffect(() => {
+    loadMyQuota();
+  }, []);
+
+  const totalLeftNum = myQuotaList.reduce((sum, item) => sum + (item.leftNum ?? 0), 0);
+
+  const quotaColumns = [
+    { title: '接口', dataIndex: 'interfaceName', render: (v: any) => v ?? '-' },
+    { title: '总调用', dataIndex: 'totalNum', width: 80 },
+    {
+      title: '剩余次数',
+      dataIndex: 'leftNum',
+      width: 100,
+      render: (v: any) => (v > 0 ? v : <span style={{ color: '#cf1322' }}>{v}</span>),
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      width: 80,
+      render: (v: any) =>
+        v === 1 ? <Tag color="error">已禁用</Tag> : <Tag color="success">正常</Tag>,
+    },
+  ];
 
   const handleSubmit = async (values: API.UserUpdateMyRequest) => {
     try {
@@ -140,6 +173,22 @@ const UserCenter: React.FC = () => {
               placeholder="上传后自动填入，也可手动粘贴图片 URL"
             />
           </ProForm>
+        </Card>
+      </Col>
+      <Col span={14}>
+        <Card
+          title="我的调用次数"
+          bordered={false}
+          extra={<span>剩余总次数：{totalLeftNum}</span>}
+        >
+          <Table
+            rowKey="id"
+            size="small"
+            pagination={false}
+            dataSource={myQuotaList}
+            columns={quotaColumns}
+            locale={{ emptyText: '暂无调用记录，调用接口后将自动开通' }}
+          />
         </Card>
       </Col>
     </Row>

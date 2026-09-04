@@ -39,6 +39,18 @@ export default [
         component: './Admin/SdkManage',
       },
       {
+        name: '用户管理',
+        icon: 'team',
+        path: '/admin/user_manage',
+        component: './Admin/UserManage',
+      },
+      {
+        name: '调用日志',
+        icon: 'profile',
+        path: '/admin/invoke_log',
+        component: './Admin/InvokeLog',
+      },
+      {
         name: '接口分析',
         icon: 'analysis',
         path: '/admin/interface_analysis',
