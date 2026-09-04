@@ -5,8 +5,8 @@ import {
   ProFormText,
   ProFormUploadButton,
 } from '@ant-design/pro-components';
-import { useModel } from '@umijs/max';
-import { Avatar, Card, Col, message, Row, Table, Tag } from 'antd';
+import { history, useModel } from '@umijs/max';
+import { Avatar, Button, Card, Col, message, Modal, Row, Table, Tag } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   fileUploadUsingPOST,
@@ -14,6 +14,7 @@ import {
   updateMyUserUsingPOST,
 } from '@/services/alanapi-backend/userController';
 import { listMyQuotaUsingGET, type UserQuotaItem } from '@/services/alanapi-backend/quotaController';
+import { cancelUserUsingPOST } from '@/services/alanapi-backend/accountController';
 
 /**
  * 个人中心：修改注册时未填写的资料（昵称、头像、性别），查看自己的接口调用次数
@@ -40,6 +41,29 @@ const UserCenter: React.FC = () => {
   }, []);
 
   const totalLeftNum = myQuotaList.reduce((sum, item) => sum + (item.leftNum ?? 0), 0);
+
+  /**
+   * 注销账号：逻辑删除当前账号并退出登录，不可恢复
+   */
+  const handleCancelAccount = () => {
+    Modal.confirm({
+      title: '确认注销账号？',
+      content:
+        '注销后该账号将无法登录，名下剩余调用次数无法继续使用，操作不可恢复，请谨慎确认！',
+      okText: '确认注销',
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        try {
+          await cancelUserUsingPOST();
+          message.success('账号已注销');
+          setInitialState((s) => ({ ...s, loginUser: undefined }));
+          history.push('/user/login');
+        } catch (error: any) {
+          message.error(error.message ?? '注销失败，请重试！');
+        }
+      },
+    });
+  };
 
   const quotaColumns = [
     { title: '接口', dataIndex: 'interfaceName', render: (v: any) => v ?? '-' },
@@ -173,6 +197,13 @@ const UserCenter: React.FC = () => {
               placeholder="上传后自动填入，也可手动粘贴图片 URL"
             />
           </ProForm>
+          {loginUser?.userRole !== 'admin' && (
+            <div style={{ textAlign: 'center', marginTop: 8, borderTop: '1px solid #f0f0f0', paddingTop: 12 }}>
+              <Button type="text" danger onClick={handleCancelAccount}>
+                注销账号
+              </Button>
+            </div>
+          )}
         </Card>
       </Col>
       <Col span={14}>
