@@ -100,7 +100,8 @@ const InvokeLog: React.FC = () => {
     {
       title: '调用时间',
       dataIndex: 'createTime',
-      width: 180,
+      valueType: 'dateTime',
+      width: 170,
       hideInSearch: true,
     },
     {

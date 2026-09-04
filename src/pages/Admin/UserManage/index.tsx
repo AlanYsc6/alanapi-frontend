@@ -408,7 +408,8 @@ const UserManage: React.FC = () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      width: 180,
+      valueType: 'dateTime',
+      width: 170,
       hideInSearch: true,
     },
     {

@@ -186,6 +186,8 @@ const TableList: React.FC = () => {
       title: '接口名称',
       dataIndex: 'name',
       valueType: 'text',
+      width: 160,
+      ellipsis: true,
       formItemProps: {
         rules: [{
           required: true,
@@ -196,11 +198,14 @@ const TableList: React.FC = () => {
       title: '描述',
       dataIndex: 'description',
       valueType: 'textarea',
+      width: 160,
+      ellipsis: true,
     },
     {
       title: '请求类型',
       dataIndex: 'method',
       valueType: 'select',
+      width: 90,
       valueEnum: {
         GET: { text: 'GET' },
         POST: { text: 'POST' },
@@ -210,11 +215,14 @@ const TableList: React.FC = () => {
       title: 'URL',
       dataIndex: 'url',
       valueType: 'text',
+      width: 240,
+      ellipsis: true,
     },
     {
       title: '请求头',
       dataIndex: 'requestHeader',
       valueType: 'jsonCode',
+      width: 280,
       hideInSearch: true,
       renderFormItem: () => <KeyValueInput addText="添加请求头" />,
     },
@@ -222,6 +230,7 @@ const TableList: React.FC = () => {
       title: '请求参数',
       dataIndex: 'requestParams',
       valueType: 'jsonCode',
+      width: 280,
       hideInSearch: true,
       tooltip: 'GET 请求的查询参数，按 key = value 填写',
       renderFormItem: () => <KeyValueInput addText="添加请求参数" />,
@@ -230,17 +239,20 @@ const TableList: React.FC = () => {
       title: '请求体',
       dataIndex: 'requestBody',
       valueType: 'jsonCode',
+      width: 280,
       hideInSearch: true,
     },
     {
       title: '响应体',
       dataIndex: 'responseBody',
       valueType: 'jsonCode',
+      width: 280,
       hideInSearch: true,
     },
     {
       title: '状态',
       dataIndex: 'status',
+      width: 70,
       hideInForm: true,
       valueEnum: {
         0: {
@@ -257,6 +269,8 @@ const TableList: React.FC = () => {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      width: 150,
+      fixed: 'right',
       render: (_, record) => [
         <a
           key="edit"
@@ -305,6 +319,7 @@ const TableList: React.FC = () => {
         headerTitle={'查询表格'}
         actionRef={actionRef}
         rowKey="id"
+        scroll={{ x: 2000 }}
         search={{
           labelWidth: 120,
         }}
