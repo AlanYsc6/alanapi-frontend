@@ -38,7 +38,7 @@ npm run start:dev     # 开发模式，默认 http://localhost:8000
 npm run build         # 生产构建，产物在 dist/
 ```
 
-前置依赖：Node 16+。需要后端服务在线：[alanapi-backend](../alanapi-backend)（7529，必须）与 [alanapi-interface](../alanapi-interface)（8123，在线调用 / 示例接口需要）。
+前置依赖：Node 16+。需要后端服务在线：[alanapi-backend](https://github.com/AlanYsc6/alanapi-backend)（7529，必须）与 [alanapi-interface](https://github.com/AlanYsc6/alanapi-interface)（8123，在线调用 / 示例接口需要）。
 
 后端地址在 `src/requestConfig.ts` 的 `baseURL` 修改；接口文档 schema 见 `config/config.ts`（Knife4j `v3/api-docs`，可用 `npm run openapi` 重新生成服务层代码）。
 
@@ -59,6 +59,6 @@ config/routes.ts             # 路由与菜单（管理端 access: canAdmin）
 
 ## 相关项目
 
-- [alanapi-backend](../alanapi-backend)：平台主后端
-- [alanapi-interface](../alanapi-interface)：接口服务
-- [alanapi-client-sdk](../alanapi-client-sdk)：客户端 SDK
+- [alanapi-backend](https://github.com/AlanYsc6/alanapi-backend)：平台主后端
+- [alanapi-interface](https://github.com/AlanYsc6/alanapi-interface)：接口服务
+- [alanapi-client-sdk](https://github.com/AlanYsc6/alanapi-client-sdk)：客户端 SDK
